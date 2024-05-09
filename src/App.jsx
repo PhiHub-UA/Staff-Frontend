@@ -1,20 +1,17 @@
-import {  Routes, Route, useNavigate } from "react-router-dom";
-import LandingPage from "./components/pages/LandingPage";
-import LoginPage from "./components/pages/LoginPage";
-import { NextUIProvider } from "@nextui-org/react";
+import {Routes, Route, BrowserRouter} from 'react-router-dom';
+import LandingPage from './components/pages/LandingPage';
+import LoginPage from './components/pages/LoginPage';
 
-function App() {
-  const navigate = useNavigate();
+function App () {
   return (
-      <NextUIProvider navigate={navigate}>
-        <main className="light">
-          <Routes>
-            <Route path="/" element={<LandingPage />} />
-            <Route path="/login" element={<LoginPage />} />
-          </Routes>
-        </main>
-      </NextUIProvider>
+    <BrowserRouter>
 
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/login" element={<LoginPage />} />
+      </Routes>
+
+    </BrowserRouter>
   );
 }
 
