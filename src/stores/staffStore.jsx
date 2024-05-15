@@ -1,11 +1,13 @@
-import {create} from 'zustand'
+import { create } from "zustand";
 
 export const useStaffStore = create((set) => ({
 
-    name: "",
-    setName: (name) => set({name}),
-    email: "",
-    setEmail: (email) => set({email})
+    username: null,
+    loggedIn: false,
+
+    logout: () => {localStorage.removeItem("token") ; set({ username: null, loggedIn: false});},
+
+    login: (username) => set({ username: username, loggedIn: true})
 
 }));
 

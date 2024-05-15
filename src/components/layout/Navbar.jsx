@@ -14,8 +14,39 @@ import {
 } from "@nextui-org/react";
 import { logo } from "../../assets";
 import { CgLogOut } from "react-icons/cg";
+import axios from "../../api/axios";
 
-function Navbar({ isLoggedIn }) {
+import {useQuery} from "@tanstack/react-query";
+import { useStaffStore } from "../../stores/staffStore";
+
+function Navbar( ) {
+
+  const login = useStaffStore((state) => state.login) || false;
+
+  const _ = useQuery({
+    queryKey: ["user"],
+    queryFn: () => {
+      axios
+        .get("/staff/users/me", {
+          headers: {
+            Authorization: localStorage.getItem("token")
+              ? `Bearer ${localStorage.getItem("token")}`
+              : undefined,
+          },
+        })
+        .then((res) => {
+          login(res.data.username);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      return null;
+    },
+  });
+
+  const user = useStaffStore((state) => state.username);
+  const logout = useStaffStore((state) => state.logout);
+
   return (
     <nav className="p-4 bg-transparent">
       <Nav className="shadow-xl rounded-xl">
@@ -24,16 +55,21 @@ function Navbar({ isLoggedIn }) {
           <p className="text-xl font-black text-primary">PHIHUB</p>
         </NavbarBrand>
 
-        {isLoggedIn && (
+        {user && (
           <NavbarContent className="hidden gap-4 sm:flex" justify="center">
             <NavbarItem>
               <Link color="foreground" href="#">
-                My Appointments
+                Dashboard
               </Link>
             </NavbarItem>
-            <NavbarItem isActive>
-              <Link href="#" aria-current="page">
-                Calendar
+            <NavbarItem>
+              <Link color="foreground" href="#">
+                Register new Staff
+              </Link>
+            </NavbarItem>
+            <NavbarItem >
+              <Link color="foreground" href="#" aria-current="page">
+                Register new Medics
               </Link>
             </NavbarItem>
           </NavbarContent>
@@ -41,53 +77,16 @@ function Navbar({ isLoggedIn }) {
 
         <NavbarContent justify="end">
           {isLoggedIn ? (
-            <NavbarContent as="div" justify="end">
-              <Dropdown placement="bottom-end">
-                <DropdownTrigger>
-                  <span className="flex flex-row items-center">
-                    <Avatar
-                      isBordered
-                      as="button"
-                      className="mr-4 transition-transform"
-                      color="secondary"
-                      name="Jason Hughes"
-                      size="sm"
-                      src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
-                    />
-                    <h1 className="text-lg cursor-pointer">Josefino Calças</h1>
-                  </span>
-                </DropdownTrigger>
-                <DropdownMenu aria-label="Profile Actions" variant="flat">
-                  <DropdownItem key="profile" className="gap-2 h-14">
-                    <p className="font-semibold">Signed in as</p>
-                    <p className="font-semibold">calcas@example.com</p>
-                  </DropdownItem>
-                  <DropdownItem key="settings">My Settings</DropdownItem>
-                  <DropdownItem key="team_settings">Team Settings</DropdownItem>
-                  <DropdownItem key="analytics">Analytics</DropdownItem>
-                  <DropdownItem key="system">System</DropdownItem>
-                  <DropdownItem key="configurations">
-                    Configurations
-                  </DropdownItem>
-                  <DropdownItem key="help_and_feedback">
-                    Help & Feedback
-                  </DropdownItem>
-                  <DropdownItem
-                    key="logout"
-                    className="flex flex-row"
-                    color="danger"
-                  >
-                    <span className="flex flex-row items-center w-full text-danger">
-                      <CgLogOut className="mr-2" /> Logout
-                    </span>
-                  </DropdownItem>
-                </DropdownMenu>
-              </Dropdown>
-            </NavbarContent>
+            <>
+              <Avatar src="https://i.pravatar.cc/300" size="md" />
+              <NavbarItem>Josefino Calças</NavbarItem>
+            </>
           ) : (
-            <NavbarItem className="hidden lg:flex">
-              <Link href="/login">Login</Link>
-            </NavbarItem>
+            <>
+              <NavbarItem className="hidden lg:flex">
+                <Link href="/login">Login</Link>
+              </NavbarItem>
+            </>
           )}
         </NavbarContent>
       </Nav>
