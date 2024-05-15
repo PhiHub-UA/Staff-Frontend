@@ -9,8 +9,8 @@ import {
 
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
-import Navbar from '../layout/Navbar';
-import Footer from '../layout/Footer';
+import Navbar from "../layout/Navbar";
+import Footer from "../layout/Footer";
 
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -20,33 +20,41 @@ import axios from "../../api/axios";
 import { useNavigate } from "react-router-dom";
 import loginSchema from "../../schemas/loginSchema";
 
-function LoginPage () {
-  const navigate = useNavigate ();
+function LoginPage() {
+  const navigate = useNavigate();
 
-  const {register, handleSubmit, formState: {errors}} = useForm ({
-    resolver: yupResolver (loginSchema),
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(loginSchema),
   });
 
   const [visible, setVisible] = useState(false);
 
-  function onSubmit (data) {
-    login.mutate (data);
+  function onSubmit(data) {
+    login.mutate(data);
   }
 
   const login = useMutation({
     mutationKey: ["login"],
     mutationFn: async (data) => {
-      const res = await axios.post("/auth/login", {...data, role:"staff"}, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const res = await axios.post(
+        
+        { ...data, role: "staff" },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
       return res;
     },
     onSuccess: (res) => {
       localStorage.setItem("token", res.data.token);
       setTimeout(() => {
-        navigate("/dashboard")
+        navigate("/dashboard");
       }, 2000);
     },
     onError: (err) => {
@@ -63,7 +71,7 @@ function LoginPage () {
             <h1 className="text-2xl font-bold text-primary">Login</h1>
           </CardHeader>
 
-          <form noValidate onSubmit={handleSubmit (onSubmit)}>
+          <form noValidate onSubmit={handleSubmit(onSubmit)}>
             <CardBody className="gap-2">
               <span className="flex flex-col">
                 <Input placeholder="Username" {...register("username")} />
@@ -97,8 +105,17 @@ function LoginPage () {
                 Login
               </Button>
 
-              {login.isError && <p className="p-1 px-2 text-error text-md">{login.error.message}</p>}
-              {login.isSuccess && <p className="p-1 px-2 text-success text-md"> Registo efetuado com sucesso </p>}
+              {login.isError && (
+                <p className="p-1 px-2 text-error text-md">
+                  {login.error.message}
+                </p>
+              )}
+              {login.isSuccess && (
+                <p className="p-1 px-2 text-success text-md">
+                  {" "}
+                  Registo efetuado com sucesso{" "}
+                </p>
+              )}
             </CardFooter>
           </form>
         </Card>
