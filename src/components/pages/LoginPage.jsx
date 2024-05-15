@@ -33,23 +33,24 @@ function LoginPage () {
     login.mutate (data);
   }
 
-  const login = useMutation ({
-    mutationKey: ['login'],
-    mutationFn: async data => {
-      await axios.post (
-        '/auth/login',
-        {...data, role: 'staff'},
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
-      );
+  const login = useMutation({
+    mutationKey: ["login"],
+    mutationFn: async (data) => {
+      const res = await axios.post("/auth/login", {...data, role:"staff"}, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      return res;
     },
-    onSuccess: () => {
-      setTimeout (() => {
-        navigate ('/dashboard');
+    onSuccess: (res) => {
+      localStorage.setItem("token", res.data.token);
+      setTimeout(() => {
+        navigate("/dashboard")
       }, 2000);
+    },
+    onError: (err) => {
+      console.error(err);
     },
   });
 

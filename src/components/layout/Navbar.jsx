@@ -9,8 +9,39 @@ import {
   Avatar,
 } from "@nextui-org/react";
 import { logo } from "../../assets";
+import axios from "../../api/axios";
 
-function Navbar({ isLoggedIn }) {
+import {useQuery} from "@tanstack/react-query";
+import { useStaffStore } from "../../stores/staffStore";
+
+function Navbar( ) {
+
+  const login = useStaffStore((state) => state.login) || false;
+
+  const _ = useQuery({
+    queryKey: ["user"],
+    queryFn: () => {
+      axios
+        .get("/staff/users/me", {
+          headers: {
+            Authorization: localStorage.getItem("token")
+              ? `Bearer ${localStorage.getItem("token")}`
+              : undefined,
+          },
+        })
+        .then((res) => {
+          login(res.data.username);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      return null;
+    },
+  });
+
+  const user = useStaffStore((state) => state.username);
+  const logout = useStaffStore((state) => state.logout);
+
   return (
     <nav className="p-4 bg-transparent">
       <Nav className="shadow-xl rounded-xl">
@@ -19,26 +50,31 @@ function Navbar({ isLoggedIn }) {
           <p className="text-xl font-black text-primary">PHIHUB</p>
         </NavbarBrand>
 
-        {isLoggedIn && (
+        {user && (
           <NavbarContent className="hidden gap-4 sm:flex" justify="center">
             <NavbarItem>
               <Link color="foreground" href="#">
-                My Appointments
+                Dashboard
               </Link>
             </NavbarItem>
-            <NavbarItem isActive>
-              <Link href="#" aria-current="page">
-                Calendar
+            <NavbarItem>
+              <Link color="foreground" href="#">
+                Register new Staff
+              </Link>
+            </NavbarItem>
+            <NavbarItem >
+              <Link color="foreground" href="#" aria-current="page">
+                Register new Medics
               </Link>
             </NavbarItem>
           </NavbarContent>
         )}
 
         <NavbarContent justify="end">
-          {isLoggedIn ? (
+          {user ? (
             <>
               <Avatar src="https://i.pravatar.cc/300" size="md" />
-              <NavbarItem>Josefino Calças</NavbarItem>
+              <NavbarItem>{user}</NavbarItem>
             </>
           ) : (
             <>
