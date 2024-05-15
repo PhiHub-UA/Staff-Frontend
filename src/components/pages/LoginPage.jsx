@@ -13,20 +13,15 @@ import Navbar from '../layout/Navbar';
 import Footer from '../layout/Footer';
 
 import { useState } from "react";
-import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useMutation } from "@tanstack/react-query";
 import axios from "../../api/axios";
 import { useNavigate } from "react-router-dom";
+import loginSchema from "../../schemas/loginSchema";
 
 function LoginPage () {
   const navigate = useNavigate ();
-
-  const loginSchema = yup.object ().shape ({
-    username: yup.string ().required (),
-    password: yup.string ().required (),
-  });
 
   const {register, handleSubmit, formState: {errors}} = useForm ({
     resolver: yupResolver (loginSchema),
