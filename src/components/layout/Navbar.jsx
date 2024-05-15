@@ -5,7 +5,6 @@ import {
   NavbarContent,
   NavbarItem,
   Link,
-  Button,
   Image,
   Avatar,
 } from "@nextui-org/react";
@@ -46,11 +45,6 @@ function Navbar({ isLoggedIn }) {
               <NavbarItem className="hidden lg:flex">
                 <Link href="/login">Login</Link>
               </NavbarItem>
-              <NavbarItem>
-                <Button as={Link} color="primary" href="/login" variant="flat">
-                  Sign Up
-                </Button>
-              </NavbarItem>{" "}
             </>
           )}
         </NavbarContent>
