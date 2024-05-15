@@ -1,50 +1,42 @@
 import Navbar from "../layout/Navbar";
 import Footer from "../layout/Footer";
 import { useNavigate } from "react-router-dom";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import medicSchema from "../../schemas/medicSchema";
 import SideMenu from "../layout/SideMenu";
-import {
-  Select,
-  SelectItem,
-  Button,
-} from "@nextui-org/react";
+import { Button } from "@nextui-org/react";
+
 import InputField from "../InputField";
 import axios from "../../api/axios";
+import staffSchema from "../../schemas/staffSchema";
 
-
-function AddMedic() {
+function AddStaff() {
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm({
-    resolver: yupResolver(medicSchema),
+    resolver: yupResolver(staffSchema),
   });
   const navigate = useNavigate();
 
-  // mock success
-
   function onSubmit(data) {
-    const formData = { ...data, role: "staff", username: data.name };
-    addMedic.mutate(JSON.stringify(formData));
+    addStaff.mutate(data);
   }
 
-  const addMedic = useMutation({
-    mutateKey: "addMedic",
-    mutationFn:  (data) => {
+  const addStaff = useMutation({
+    mutateKey: "addStaff",
+    mutationFn: (data) => {
       console.log(data);
-      const res =  axios.post("staff/medics", data, {
+      const res = axios.post("staff/users", data, {
         headers: {
           "Content-Type": "application/json",
           Authorization: localStorage.getItem("token")
             ? `Bearer ${localStorage.getItem("token")}`
             : undefined,
         },
-      
       });
       return res.data;
     },
@@ -52,20 +44,6 @@ function AddMedic() {
       setTimeout(() => {
         navigate("/dashboard"); // change to /medics
       }, 5000);
-    },
-  });
-
-  const { data: specialities } = useQuery({
-    queryKey: ["specialities"],
-    queryFn: async () => {
-      const res = await axios.get("/patient/speciality", {
-        headers: {
-          Authorization: localStorage.getItem("token")
-            ? `Bearer ${localStorage.getItem("token")}`
-            : undefined,
-        },
-      });
-      return res.data;
     },
   });
 
@@ -137,25 +115,6 @@ function AddMedic() {
                 isRequired
                 isPassword
               />
-              <span className="flex flex-col">
-                <Select
-                  label="Speciality"
-                  selectionMode="multiple"
-                  {...register("specialities")}
-                  isRequired
-                >
-                  {specialities?.map((item) => (
-                    <SelectItem key={item} value={item}>
-                      {item}
-                    </SelectItem>
-                  ))}
-                </Select>
-                {errors.specialities && (
-                  <p className="p-1 px-2 text-error text-md">
-                    {errors.specialities.message}{" "}
-                  </p>
-                )}
-              </span>
             </article>
             <Button
               type="submit"
@@ -168,8 +127,8 @@ function AddMedic() {
               Add medic
             </Button>
           </form>
-          {addMedic.isSuccess && (
-            <p className="text-green-500">Medic added successfully</p>
+          {addStaff.isSuccess && (
+            <p className="text-green-500">Staff added successfully</p>
           )}
         </section>
       </section>
@@ -178,4 +137,4 @@ function AddMedic() {
   );
 }
 
-export default AddMedic;
+export default AddStaff;

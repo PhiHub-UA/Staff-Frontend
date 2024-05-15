@@ -2,6 +2,7 @@ import * as yup from 'yup';
 
 const medicSchema = yup.object().shape({
     name: yup.string().required(),
+    username: yup.string().required(),
     phone: yup.string().required(),
     email: yup.string().email().required(),
     age: yup.number().required(),

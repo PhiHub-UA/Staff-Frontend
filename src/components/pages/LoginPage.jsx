@@ -41,7 +41,7 @@ function LoginPage() {
     mutationKey: ["login"],
     mutationFn: async (data) => {
       const res = await axios.post(
-        
+        "/auth/login",
         { ...data, role: "staff" },
         {
           headers: {

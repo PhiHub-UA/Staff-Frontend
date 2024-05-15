@@ -5,3 +5,8 @@
 .hero-gradient {
     background: radial-gradient(30.2% 57.05% at 26.89% 50%, #698bf9 0%, #edf1ff 100%);}
 
+
+.glass {
+    @apply rounded-lg shadow-xl bg-white/30 backdrop-blur-md isolate ring-1 ring-black/5;
+}
+
