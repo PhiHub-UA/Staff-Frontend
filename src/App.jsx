@@ -7,6 +7,7 @@ import AddStaff from './components/pages/AddStaff';
 import Medics from './components/pages/Medics';
 import Staff from './components/pages/Staff';
 import MyAppointments from './components/pages/Appointments';
+import Patients from './components/pages/Patients';
 
 function App () {
   return (
@@ -21,6 +22,7 @@ function App () {
         <Route path="/medics" element={<Medics />} />
         <Route path="/staff" element={<Staff />} />
         <Route path="/appointments" element={<MyAppointments />} />
+        <Route path="/patients" element={<Patients />} />
 
       </Routes>
 
