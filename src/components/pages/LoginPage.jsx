@@ -19,7 +19,6 @@ import { useMutation } from "@tanstack/react-query";
 import axios from "../../api/axios";
 import { useNavigate } from "react-router-dom";
 import loginSchema from "../../schemas/loginSchema";
-import {Tabs,Tab} from "@nextui-org/react";
 
 function LoginPage() {
   const navigate = useNavigate();

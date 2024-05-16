@@ -27,9 +27,10 @@ function Navbar () {
   const login = useStaffStore (state => state.login) || false;
   const user = useStaffStore (state => state.username);
   const role = useStaffStore (state => state.role);
+  const logout = useStaffStore (state => state.logout);
 
-  const logout = () => {
-    useStaffStore (state => state.logout);
+  const handleLogout = () => {
+    logout ();
     navigate ('/');
   };
 
@@ -106,7 +107,7 @@ function Navbar () {
                       size="sm"
                       src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
                     />
-                    <h1 className="font-semibold text-primary pr-2">{user}</h1>
+                    <h1 className="pr-2 font-semibold text-primary">{user}</h1>
                     <Chip color="default">{role}</Chip>
                   </span>
                 </DropdownTrigger>
@@ -122,7 +123,7 @@ function Navbar () {
                     key="logout"
                     color="danger"
                     as="button"
-                    onClick={logout}
+                    onClick={handleLogout}
                   >
                     <span className="flex flex-row items-center gap-2 text-danger">
 
