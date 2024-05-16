@@ -3,6 +3,7 @@ import Footer from "../layout/Footer";
 import {  useQuery } from "@tanstack/react-query";
 import SideMenu from "../layout/SideMenu";
 import axios from "../../api/axios";
+import { useState } from "react";
 
 import {
   Table,
@@ -13,8 +14,14 @@ import {
   TableCell
 } from "@nextui-org/table";
 import {Button} from "@nextui-org/react";
+import NotesModal from "../layout/NotesModal";
+import { useDisclosure } from "@nextui-org/react";
+
 
 function MyAppointments() {
+
+  const [selectedAppointment, setSelectedAppointment] = useState(null);
+
 
   const {data:appointments} = useQuery({
     queryKey: ["medicAppointments"],
@@ -26,13 +33,11 @@ function MyAppointments() {
             : undefined,
         },
       });
-      console.log(res.data);
       return res.data;
     },
-    onSuccess: () => {
-      
-    },
   });
+
+  const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure();
 
   return (
     <main className="flex flex-col w-full min-h-screen hero-gradient">
@@ -57,21 +62,22 @@ function MyAppointments() {
                   
                 </TableHeader>
                 <TableBody>
+
                   {appointments?.map((appointment) => (
-                    <TableRow>
+                    <TableRow key = {appointment.id}>
                       <TableCell>{new Date(appointment.date).toLocaleString() }</TableCell>
                       
                       <TableCell>{appointment.patient.name}</TableCell>
                       <TableCell>{appointment.speciality}</TableCell>
                       <TableCell>{appointment.price}€</TableCell>
                       <TableCell>
-                        {appointment.notes ? (
-                          <Button>View Notes</Button>
-                        ) : (
-
-                          <Button color="primary">Add Notes</Button>
-                          
-                        )}
+                          <Button color="primary" 
+                          onClick={() => {
+                            setSelectedAppointment(appointment.id);
+                            onOpen();
+                          }
+                        }
+                          >Check Notes</Button>
                       </TableCell> 
 
                       {/* <TableCell>
@@ -97,6 +103,7 @@ function MyAppointments() {
 
         </section>
       </section>
+      <NotesModal appointmentID= {selectedAppointment} isOpen={isOpen} onOpenChange={onOpenChange} onClose={onClose} />
       <Footer />
     </main>
   );
