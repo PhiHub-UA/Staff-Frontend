@@ -29,7 +29,7 @@ function SideMenu({ className }) {
                 </Link>
               </li>
               <li>
-                <Link href="/addpatient" className="text-xl">
+                <Link href="/appointments" className="text-xl">
                   Appointments
               </Link>
               </li>
