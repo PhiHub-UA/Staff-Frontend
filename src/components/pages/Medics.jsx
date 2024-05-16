@@ -41,7 +41,6 @@ function Medics() {
 
     private List<Speciality> specialities;
 
-
     */
 
     return (
@@ -49,7 +48,7 @@ function Medics() {
           <Navbar isLoggedIn />
           <section className="grid grid-cols-5 grow mx-[5%] gap-4 p-4">
             <SideMenu className="col-span-1" />
-            <section className="flex flex-col col-span-4 gap-4  rounded-lg ">
+            <section className="flex flex-col col-span-4 gap-4 rounded-lg ">
               <article className="flex flex-col gap-4 p-4 glass">
                 <h1 className="px-2 text-2xl font-bold ">Medics</h1>
               </article>
