@@ -107,13 +107,13 @@ function LoginPage() {
 
               {login.isError && (
                 <p className="p-1 px-2 text-error text-md">
-                  {login.error.message}
+                  Credenciais inválidas.
                 </p>
               )}
               {login.isSuccess && (
                 <p className="p-1 px-2 text-success text-md">
                   {" "}
-                  Registo efetuado com sucesso{" "}
+                  Login efetuado com sucesso{" "}
                 </p>
               )}
             </CardFooter>

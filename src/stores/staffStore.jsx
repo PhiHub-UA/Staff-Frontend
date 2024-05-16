@@ -2,13 +2,14 @@ import { create } from "zustand";
 
 export const useStaffStore = create((set) => ({
   username: null,
-  role: [],
+  role : "medic" | "staff",
+  permissions : [],
   loggedIn: false,
 
   logout: () => {
     localStorage.removeItem("token");
-    set({ username: null, loggedIn: false });
+    set({ username: null, loggedIn: false, permissions: [] , role : null});
   },
 
-  login: (username) => set({ username: username, loggedIn: true }),
+  login: (username, role ,permissions) => set({ username: username, role : role, permissions : permissions , loggedIn: true }),
 }));

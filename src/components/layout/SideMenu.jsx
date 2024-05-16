@@ -1,7 +1,11 @@
 /* eslint-disable react/prop-types */
 import { Link } from "@nextui-org/react";
+import { useStaffStore } from "../../stores/staffStore";
 
 function SideMenu({ className }) {
+
+  const permissions = useStaffStore((state) => state.permissions);
+
   return (
     <div
       className={`flex flex-col items-start gap-2 p-4 bg-white rounded-lg backdrop-blur-sm ${className} `}
@@ -14,11 +18,24 @@ function SideMenu({ className }) {
               Dashboard
             </Link>
           </li>
+          {permissions && permissions.includes("MANAGE") && ( 
+            <> 
+        
           <li>
             <Link href="/staff" className="text-xl">
               Staff
             </Link>
           </li>
+
+          <li>
+<Link href="/medics" className="text-xl">
+  Medics
+</Link>
+</li>
+</>
+          )}
+          {permissions && permissions.includes("CREATE") && ( 
+            <> 
           <li>
             <Link href="/addmedic" className="text-xl">
               Add a medic
@@ -29,11 +46,8 @@ function SideMenu({ className }) {
               Add a staff
             </Link>
           </li>
-          <li>
-            <Link href="/medics" className="text-xl">
-              Medics
-            </Link>
-          </li>
+          </>
+          )}
         </ul>
       </section>
     </div>

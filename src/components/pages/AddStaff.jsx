@@ -1,7 +1,7 @@
 import Navbar from "../layout/Navbar";
 import Footer from "../layout/Footer";
 import { useNavigate } from "react-router-dom";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -11,6 +11,10 @@ import { Button } from "@nextui-org/react";
 import InputField from "../InputField";
 import axios from "../../api/axios";
 import staffSchema from "../../schemas/staffSchema";
+import {
+  Select,
+  SelectItem,
+} from "@nextui-org/react";
 
 function AddStaff() {
   const {
@@ -23,14 +27,14 @@ function AddStaff() {
   const navigate = useNavigate();
 
   function onSubmit(data) {
-    addStaff.mutate(data);
+    addStaff.mutate({...data, role:"staff"});
   }
 
   const addStaff = useMutation({
     mutateKey: "addStaff",
     mutationFn: (data) => {
       console.log(data);
-      const res = axios.post("staff/users", data, {
+      const res = axios.post("staff", data, {
         headers: {
           "Content-Type": "application/json",
           Authorization: localStorage.getItem("token")
@@ -47,12 +51,26 @@ function AddStaff() {
     },
   });
 
+  const {data:permissions} = useQuery({
+    queryKey: ["permissions"],
+    queryFn: async () => {
+      const res = await  axios.get("staff/permissions", {
+        headers: {
+          Authorization: localStorage.getItem("token")
+            ? `Bearer ${localStorage.getItem("token")}`
+            : undefined,
+        },
+      });
+      return res.data;
+    },
+  });
+
   return (
     <main className="flex flex-col w-full min-h-screen hero-gradient">
       <Navbar isLoggedIn />
       <section className="grid grid-cols-5 grow mx-[5%] gap-4 p-4">
         <SideMenu className="col-span-1" />
-        <section className="flex flex-col col-span-4 gap-4 p-4 rounded-lg ">
+        <section className="flex flex-col col-span-4 gap-4  rounded-lg ">
           <article className="flex flex-col gap-4 p-4 glass">
             <h1 className="px-2 text-2xl font-bold ">Add a medic</h1>
           </article>
@@ -115,6 +133,21 @@ function AddStaff() {
                 isRequired
                 isPassword
               />
+              {/* select for permissions */}
+              <Select
+                name="permissions"
+                label="Permissions"
+                placeholder="Select permissions"
+                selectionMode="multiple"
+                {...register("permissions")}
+                errors = {errors?.permissions}
+              >
+                {permissions?.map((permission) => (
+                  <SelectItem key={permission} value={permission}>
+                    {permission}
+                  </SelectItem>
+                ))}
+              </Select>
             </article>
             <Button
               type="submit"
@@ -124,7 +157,7 @@ function AddStaff() {
               color="primary"
               className="text-xl text-white rounded-lg"
             >
-              Add medic
+              Add Staff
             </Button>
           </form>
           {addStaff.isSuccess && (
