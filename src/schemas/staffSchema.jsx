@@ -7,7 +7,9 @@ const staffSchema = yup.object().shape({
     email: yup.string().email().required(),
     age: yup.number().required(),
     password: yup.string().required(),
-    
+    permissions: yup.array().of(yup.string()).transform((value, originalValue) => 
+        typeof originalValue === 'string' ? originalValue.split(',').map(item => item.trim()) : value
+    ).required(), 
 })
 
 export default staffSchema;
