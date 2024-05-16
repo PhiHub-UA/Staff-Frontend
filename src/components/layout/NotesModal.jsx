@@ -7,15 +7,14 @@ import {
   ModalFooter,
   Button
 } from "@nextui-org/react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import { Textarea } from "@nextui-org/react";
 import axios from "../../api/axios";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 
 function NotesModal({ appointmentID, isOpen, onOpenChange, onClose }) {
 
-  const queryClient = useQueryClient();
   
   const [writtenNotes, setWrittenNotes] = useState("");
 
@@ -32,6 +31,7 @@ function NotesModal({ appointmentID, isOpen, onOpenChange, onClose }) {
           },
         }
       );
+      setWrittenNotes(res.data.notes)
       return res.data.notes;
     },
     enabled : isOpen
@@ -58,11 +58,6 @@ function NotesModal({ appointmentID, isOpen, onOpenChange, onClose }) {
     },
   });
 
-  useEffect(() => {
-    if (notes) {
-      setWrittenNotes(notes);
-    }
-  }, [notes]);
 
   return (
     <Modal size="xs" isOpen={isOpen} onOpenChange={onOpenChange}>
