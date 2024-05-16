@@ -5,6 +5,7 @@ import { useStaffStore } from "../../stores/staffStore";
 function SideMenu({ className }) {
 
   const permissions = useStaffStore((state) => state.permissions);
+  const role = useStaffStore((state) => state.role);
 
   return (
     <div
@@ -18,9 +19,27 @@ function SideMenu({ className }) {
               Dashboard
             </Link>
           </li>
+
+          {role && role ==="medic" && (
+            <>
+
+              <li>
+                <Link href="/patients" className="text-xl">
+                  Patients
+                </Link>
+              </li>
+              <li>
+                <Link href="/addpatient" className="text-xl">
+                  Appointments
+              </Link>
+              </li>
+            </>
+
+            )  }
+
           {permissions && permissions.includes("MANAGE") && ( 
             <> 
-        
+
           <li>
             <Link href="/staff" className="text-xl">
               Staff
@@ -28,11 +47,11 @@ function SideMenu({ className }) {
           </li>
 
           <li>
-<Link href="/medics" className="text-xl">
-  Medics
-</Link>
-</li>
-</>
+          <Link href="/medics" className="text-xl">
+              Medics
+          </Link>
+          </li>
+          </>
           )}
           {permissions && permissions.includes("CREATE") && ( 
             <> 
