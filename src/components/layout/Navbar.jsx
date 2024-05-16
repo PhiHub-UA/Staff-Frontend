@@ -49,7 +49,6 @@ function Navbar () {
           login (res.data.username, 'staff', res.data.permissions);
         })
         .catch (err => {
-          console.log (err);
         });
       return null;
     },
@@ -58,7 +57,6 @@ function Navbar () {
   const getMedic = useQuery ({
     queryKey: ['medic'],
     queryFn: () => {
-      console.log ('mamaqui');
       axios
         .get ('/staff/medics/me', {
           headers: {
