@@ -14,21 +14,27 @@ import {
 } from '@nextui-org/react';
 import {logo} from '../../assets';
 import {CgLogOut} from 'react-icons/cg';
-import { CgProfile } from "react-icons/cg";
+import {CgProfile} from 'react-icons/cg';
 import axios from '../../api/axios';
-import {Chip} from "@nextui-org/react";
+import {Chip} from '@nextui-org/react';
+import {useNavigate} from 'react-router-dom';
 
 import {useQuery} from '@tanstack/react-query';
 import {useStaffStore} from '../../stores/staffStore';
 
 function Navbar () {
+  const navigate = useNavigate ();
   const login = useStaffStore (state => state.login) || false;
   const user = useStaffStore (state => state.username);
   const role = useStaffStore (state => state.role);
-  const logout = useStaffStore (state => state.logout);
+
+  const logout = () => {
+    useStaffStore (state => state.logout);
+    navigate ('/');
+  };
 
   const getStaff = useQuery ({
-    queryKey: ["staff"],
+    queryKey: ['staff'],
     queryFn: () => {
       axios
         .get ('/staff/me', {
@@ -39,7 +45,7 @@ function Navbar () {
           },
         })
         .then (res => {
-          login (res.data.username,"staff", res.data.permissions);
+          login (res.data.username, 'staff', res.data.permissions);
         })
         .catch (err => {
           console.log (err);
@@ -49,9 +55,9 @@ function Navbar () {
   });
 
   const getMedic = useQuery ({
-    queryKey: ["medic"],
+    queryKey: ['medic'],
     queryFn: () => {
-      console.log("mamaqui");
+      console.log ('mamaqui');
       axios
         .get ('/staff/medics/me', {
           headers: {
@@ -61,7 +67,7 @@ function Navbar () {
           },
         })
         .then (res => {
-          login(res.data.username,"medic", res.data.permissions);
+          login (res.data.username, 'medic', res.data.permissions);
         })
         .catch (err => {
           console.log (err);
@@ -69,8 +75,6 @@ function Navbar () {
       return null;
     },
   });
-
-
 
   return (
     <nav className="p-4 bg-transparent">
@@ -86,8 +90,7 @@ function Navbar () {
                 Dashboard
               </Link>
             </NavbarItem>
-          </NavbarContent>
-          }
+          </NavbarContent>}
 
         {user
           ? <NavbarContent as="div" justify="end">
@@ -104,16 +107,16 @@ function Navbar () {
                       src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
                     />
                     <h1 className="font-semibold text-primary pr-2">{user}</h1>
-                    <Chip color="default" >{role}</Chip>
+                    <Chip color="default">{role}</Chip>
                   </span>
                 </DropdownTrigger>
                 <DropdownMenu aria-label="Profile Actions" variant="flat">
                   <DropdownItem color="primary" as="button">
-                  <span className="flex flex-row items-center gap-2 text-primary">
-                  <CgProfile />
-                    <Link href="#">Profile</Link>
+                    <span className="flex flex-row items-center gap-2 text-primary">
+                      <CgProfile />
+                      <Link href="#">Profile</Link>
                     </span>
-        
+
                   </DropdownItem>
                   <DropdownItem
                     key="logout"
