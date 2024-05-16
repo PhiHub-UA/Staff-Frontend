@@ -15,6 +15,7 @@ import {
 import {logo} from '../../assets';
 import {CgLogOut} from 'react-icons/cg';
 import axios from '../../api/axios';
+import {Chip} from "@nextui-org/react";
 
 import {useQuery} from '@tanstack/react-query';
 import {useStaffStore} from '../../stores/staffStore';
@@ -22,10 +23,11 @@ import {useStaffStore} from '../../stores/staffStore';
 function Navbar () {
   const login = useStaffStore (state => state.login) || false;
   const user = useStaffStore (state => state.username);
+  const role = useStaffStore (state => state.role);
   const logout = useStaffStore (state => state.logout);
 
-  const _ = useQuery ({
-    queryKey: ['user'],
+  const getStaff = useQuery ({
+    queryKey: ["staff"],
     queryFn: () => {
       axios
         .get ('/staff/me', {
@@ -45,6 +47,30 @@ function Navbar () {
     },
   });
 
+  const getMedic = useQuery ({
+    queryKey: ["medic"],
+    queryFn: () => {
+      console.log("mamaqui");
+      axios
+        .get ('/staff/medics/me', {
+          headers: {
+            Authorization: localStorage.getItem ('token')
+              ? `Bearer ${localStorage.getItem ('token')}`
+              : undefined,
+          },
+        })
+        .then (res => {
+          login(res.data.username,"medic", res.data.permissions);
+        })
+        .catch (err => {
+          console.log (err);
+        });
+      return null;
+    },
+  });
+
+
+
   return (
     <nav className="p-4 bg-transparent">
       <Nav className="shadow-xl rounded-xl">
@@ -52,7 +78,6 @@ function Navbar () {
           <Image src={logo} alt="ACME" width={32} height={32} />
           <p className="text-xl font-black text-primary">PHIHUB</p>
         </NavbarBrand>
-
         {user &&
           <NavbarContent className="hidden gap-4 sm:flex" justify="center">
             <NavbarItem>
@@ -77,7 +102,8 @@ function Navbar () {
                       size="sm"
                       src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
                     />
-                    <h1 className="font-semibold text-primary">{user}</h1>
+                    <h1 className="font-semibold text-primary pr-2">{user}</h1>
+                    <Chip color="default" >{role}</Chip>
                   </span>
                 </DropdownTrigger>
                 <DropdownMenu aria-label="Profile Actions" variant="flat">
