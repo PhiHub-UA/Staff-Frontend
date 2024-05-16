@@ -57,12 +57,12 @@ function SideMenu({ className }) {
             <> 
           <li>
             <Link href="/addmedic" className="text-xl">
-              Add a medic
+              Add Medics
             </Link>
           </li>
           <li>
             <Link href="/addstaff" className="text-xl">
-              Add a staff
+              Add Staff Personnel
             </Link>
           </li>
           </>
