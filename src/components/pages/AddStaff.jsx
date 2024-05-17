@@ -72,7 +72,7 @@ function AddStaff() {
         <SideMenu className="col-span-1" />
         <section className="flex flex-col col-span-4 gap-4  rounded-lg ">
           <article className="flex flex-col gap-4 p-4 glass">
-            <h1 className="px-2 text-2xl font-bold ">Add a medic</h1>
+            <h1 className="px-2 text-2xl font-bold ">Add Staff</h1>
           </article>
 
           <form
