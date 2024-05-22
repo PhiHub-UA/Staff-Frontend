@@ -6,15 +6,15 @@ import axios from '../../api/axios';
 import {useState} from 'react';
 
 function Dashboard () {
-  const queryClient = useQueryClient ();
+
+  const queryClient = useQueryClient();
 
   const [deskNumber, setDeskNumber] = useState(1);
 
   const nextTicket = useQuery ({
     queryKey: ['nextAppointment', deskNumber],
-    queryFn: async (deskNumber) => {
-      console.log("getting next ticket for desk number", deskNumber.queryKey[1])
-      const res = await axios.get (`staff/reception/next/${deskNumber.queryKey[1]}`, {
+    queryFn: async () => {
+      const res = await axios.get (`staff/reception/next/${deskNumber}`, {
         headers: {
           Authorization: localStorage.getItem ('token')
             ? `Bearer ${localStorage.getItem ('token')}`
@@ -68,7 +68,6 @@ function Dashboard () {
                       className="p-2 text-white rounded-lg bg-secondary"
                       onClick={() => {
                         setDeskNumber(item.deskNumber);
-
                         setTimeout(() => {
                         nextTicket.refetch();
                         }, 300);
