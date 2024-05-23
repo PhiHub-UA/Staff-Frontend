@@ -13,10 +13,9 @@ import {
   TableRow,
   TableCell
 } from "@nextui-org/table";
-import {Button} from "@nextui-org/react";
-import NotesModal from "../layout/NotesModal";
-import { useDisclosure } from "@nextui-org/react";
 
+import {Button, useDisclosure } from "@nextui-org/react";
+import NotesModal from "../layout/NotesModal";
 
 function MyAppointments() {
 

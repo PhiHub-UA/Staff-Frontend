@@ -66,7 +66,7 @@ function Medics() {
 
                     <TableBody>
                         {medics?.map((medic) => (
-                            <TableRow>
+                            <TableRow key={medic.id}>
                                 <TableCell>{medic.name}</TableCell>
                                 <TableCell>{medic.email}</TableCell>
                                 <TableCell>{medic.age}</TableCell>

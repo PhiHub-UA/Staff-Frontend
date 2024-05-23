@@ -30,21 +30,6 @@ function Staff() {
     });
 
 
-    /*
-
-    private String phone;
-    private String email;
-    private Integer age;
-    private String username;
-    private String name;
-    @JsonIgnore
-    private String password;
-    private List<StaffPermissions> permissions;
-
-
-    */
-
-
     return (
         <main className="flex flex-col w-full min-h-screen hero-gradient">
           <Navbar isLoggedIn />
@@ -68,8 +53,8 @@ function Staff() {
 
                     <TableBody>
 
-                        {staff && staff.map((staff) => (
-                            <TableRow>
+                        {staff?.map((staff) => (
+                            <TableRow key={staff.id}>
                                 <TableCell>{staff.name}</TableCell>
                                 <TableCell>{staff.email}</TableCell>
                                 <TableCell>{staff.age}</TableCell>

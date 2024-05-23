@@ -11,12 +11,11 @@ import {
   DropdownTrigger,
   DropdownMenu,
   DropdownItem,
+  Chip
 } from '@nextui-org/react';
 import {logo} from '../../assets';
-import {CgLogOut} from 'react-icons/cg';
-import {CgProfile} from 'react-icons/cg';
+import {CgLogOut, CgProfile} from 'react-icons/cg';
 import axios from '../../api/axios';
-import {Chip} from '@nextui-org/react';
 import {useNavigate} from 'react-router-dom';
 
 import {useQuery} from '@tanstack/react-query';
@@ -34,7 +33,7 @@ function Navbar () {
     navigate ('/');
   };
 
-  const getStaff = useQuery ({
+  useQuery ({
     queryKey: ['staff'],
     queryFn: () => {
       axios
@@ -55,7 +54,7 @@ function Navbar () {
     enabled : role !== 'staff',
   });
 
-  const getMedic = useQuery ({
+  useQuery ({
     queryKey: ['medic'],
     queryFn: () => {
       axios

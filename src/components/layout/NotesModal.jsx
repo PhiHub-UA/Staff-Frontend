@@ -1,14 +1,13 @@
-import React from "react";
+
 import {
   Modal,
   ModalContent,
   ModalHeader,
   ModalBody,
   ModalFooter,
-  Button
+  Button, Textarea
 } from "@nextui-org/react";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { Textarea } from "@nextui-org/react";
 import axios from "../../api/axios";
 import { useState } from "react";
 

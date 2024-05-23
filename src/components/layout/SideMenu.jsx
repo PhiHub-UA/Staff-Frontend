@@ -37,7 +37,7 @@ function SideMenu({ className }) {
 
             )  }
 
-          {permissions && permissions.includes("MANAGE") && ( 
+          {permissions?.includes("MANAGE") && ( 
             <> 
 
           <li>
@@ -53,7 +53,7 @@ function SideMenu({ className }) {
           </li>
           </>
           )}
-          {permissions && permissions.includes("CREATE") && ( 
+          {permissions?.includes("CREATE") && ( 
             <> 
           <li>
             <Link href="/addmedic" className="text-xl">

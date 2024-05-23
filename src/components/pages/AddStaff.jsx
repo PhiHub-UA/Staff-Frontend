@@ -6,15 +6,12 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import SideMenu from "../layout/SideMenu";
-import { Button } from "@nextui-org/react";
+import { Button, Select, SelectItem } from "@nextui-org/react";
 
 import InputField from "../InputField";
 import axios from "../../api/axios";
 import staffSchema from "../../schemas/staffSchema";
-import {
-  Select,
-  SelectItem,
-} from "@nextui-org/react";
+
 
 function AddStaff() {
   const {
