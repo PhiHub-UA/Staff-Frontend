@@ -52,6 +52,7 @@ function Navbar () {
         });
       return null;
     },
+    enabled : role !== 'staff',
   });
 
   const getMedic = useQuery ({
@@ -73,6 +74,7 @@ function Navbar () {
         });
       return null;
     },
+    enabled : role !== 'medic',
   });
 
   return (
