@@ -1,6 +1,6 @@
 import Navbar from "../layout/Navbar";
 import Footer from "../layout/Footer";
-import {  useQuery } from "@tanstack/react-query";
+import {  useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import SideMenu from "../layout/SideMenu";
 import axios from "../../api/axios";
 import { useState } from "react";
@@ -20,6 +20,7 @@ import NotesModal from "../layout/NotesModal";
 function MyAppointments() {
 
   const [selectedAppointment, setSelectedAppointment] = useState(null);
+  const queryClient = useQueryClient();
 
 
   const {data:appointments} = useQuery({
@@ -34,6 +35,24 @@ function MyAppointments() {
       });
       return res.data;
     },
+  });
+
+
+  const endAppointment = useMutation({
+    mutationKey: ["endAppointment"],
+    mutationFn: async (appointmentID) => {
+      const res = await axios.put(`/medic/appointments/${appointmentID}/end`, {}, {
+        headers: {
+          Authorization: localStorage.getItem("token")
+            ? `Bearer ${localStorage.getItem("token")}`
+            : undefined,
+        },
+      });
+      return res.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries("medicAppointments");
+    }
   });
 
   const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure();
@@ -58,6 +77,7 @@ function MyAppointments() {
                   <TableColumn>Speciality</TableColumn>
                   <TableColumn>Price</TableColumn>
                   <TableColumn>Notes</TableColumn>
+                  <TableColumn>Finish Appointment</TableColumn>
                   
                 </TableHeader>
                 <TableBody>
@@ -78,6 +98,22 @@ function MyAppointments() {
                         }
                           >Check Notes</Button>
                       </TableCell> 
+                      {appointment?.state == "CHECKED_IN" ? (<TableCell>
+                        <Button color="success" 
+                        onClick={() => {
+                          endAppointment.mutate(appointment.id);
+                        }}
+                        >Finish appointment</Button>
+                      </TableCell>)
+                      : 
+                      appointment?.state == "FINISHED" ? (<TableCell>
+                        <Button color="default" disabled={true}>Appointment finished already</Button>
+                      </TableCell>)
+                      :
+                      (<TableCell>
+                        <Button color="default" disabled={true}>Not possible</Button>
+                      </TableCell>)
+                      }
 
                       {/* <TableCell>
                         {appointment.bill ? (
