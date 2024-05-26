@@ -20,26 +20,26 @@ function SideMenu({ className }) {
             </Link>
           </li>
 
-          {role && role ==="medic" && (
-            <>
+          {role && role === "medic" && (
+
 
               <li>
                 <Link href="/patients" className="text-xl">
                   Patients
                 </Link>
               </li>
+            )  }
+            
               <li>
                 <Link href="/appointments" className="text-xl">
                   Appointments
               </Link>
               </li>
-            </>
 
-            )  }
+
 
           {permissions?.includes("MANAGE") && ( 
             <> 
-
           <li>
             <Link href="/staff" className="text-xl">
               Staff
