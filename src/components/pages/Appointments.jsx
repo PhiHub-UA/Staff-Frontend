@@ -41,7 +41,6 @@ function MyAppointments() {
     },
   });
 
-
   const getMedicAppointments = async () => {  
     const res = await axios.get("/medic/appointments", {
       headers: {
