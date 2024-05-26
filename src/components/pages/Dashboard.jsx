@@ -26,6 +26,7 @@ function Dashboard () {
       return res.data;
     },
     enabled: false,
+    retry:false,
   });
 
 
@@ -75,6 +76,7 @@ function Dashboard () {
                     >
                       Call Next
                     </button>
+                    {item.deskNumber == deskNumber && nextTicket.isError && <h1>No more tickets!</h1>}
                   </section>
                 ))}
             </div>
