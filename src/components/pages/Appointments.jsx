@@ -4,6 +4,7 @@ import {  useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import SideMenu from "../layout/SideMenu";
 import axios from "../../api/axios";
 import { useState } from "react";
+import { useStaffStore } from "../../stores/staffStore";
 
 import {
   Table,
@@ -19,14 +20,54 @@ import NotesModal from "../layout/NotesModal";
 
 function MyAppointments() {
 
-  const [selectedAppointment, setSelectedAppointment] = useState(null);
   const queryClient = useQueryClient();
 
+  const [selectedAppointment, setSelectedAppointment] = useState(null);
+
+  const role = useStaffStore((state) => state.role);
 
   const {data:appointments} = useQuery({
-    queryKey: ["medicAppointments"],
+    queryKey: ["appointments"],
     queryFn: async () => {
-      const res = await axios.get("/medic/appointments", {
+
+      console.log(role);
+
+      if(role === "staff") {
+        return await getAllAppointments();
+      } else {
+        return await getMedicAppointments();
+      }
+
+    },
+  });
+
+  const getMedicAppointments = async () => {  
+    const res = await axios.get("/medic/appointments", {
+      headers: {
+        Authorization: localStorage.getItem("token")
+          ? `Bearer ${localStorage.getItem("token")}`
+          : undefined,
+      },
+    })
+    return res.data;
+  };
+
+
+  const getAllAppointments = async () => {
+    const res = await axios.get("/staff/appointments", {
+      headers: {
+        Authorization: localStorage.getItem("token")
+          ? `Bearer ${localStorage.getItem("token")}`
+          : undefined,
+      },
+    });
+    return res.data;
+  };
+
+  const issueBill = useMutation({
+    mutationFn: async (appointmentID) => {
+      console.log(appointmentID);
+      const res = await axios.put(`/staff/appointments/${appointmentID}/issue_bill`, {}, {
         headers: {
           Authorization: localStorage.getItem("token")
             ? `Bearer ${localStorage.getItem("token")}`
@@ -34,6 +75,9 @@ function MyAppointments() {
         },
       });
       return res.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries("appointments");
     },
   });
 
@@ -64,7 +108,7 @@ function MyAppointments() {
         <SideMenu className="col-span-1" />
         <section className="flex flex-col col-span-4 gap-4  rounded-lg ">
           <article className="flex flex-col gap-4 p-4 glass">
-            <h1 className="px-2 text-2xl font-bold ">My Appointments</h1>
+            <h1 className="px-2 text-2xl font-bold ">{role === "staff" ? "All Appointments" : "My Appointments" }</h1>
           </article>
 
             <section className="flex flex-col gap-4 p-4 bg-white rounded-lg backdrop-blur-sm ">
@@ -74,9 +118,11 @@ function MyAppointments() {
                   <TableColumn>Date</TableColumn>
                  
                   <TableColumn>Patient</TableColumn>
+                  <TableColumn>Doctor</TableColumn>
                   <TableColumn>Speciality</TableColumn>
                   <TableColumn>Price</TableColumn>
                   <TableColumn>Notes</TableColumn>
+                  <TableColumn>Bill Status</TableColumn>
                   <TableColumn>Finish Appointment</TableColumn>
                   
                 </TableHeader>
@@ -87,8 +133,11 @@ function MyAppointments() {
                       <TableCell>{new Date(appointment.date).toLocaleString() }</TableCell>
                       
                       <TableCell>{appointment.patient.name}</TableCell>
+                      <TableCell>{appointment.medic.name}</TableCell>
                       <TableCell>{appointment.speciality}</TableCell>
                       <TableCell>{appointment.price}€</TableCell>
+
+
                       <TableCell>
                           <Button color="primary" 
                           onClick={() => {
@@ -98,7 +147,60 @@ function MyAppointments() {
                         }
                           >Check Notes</Button>
                       </TableCell> 
-                      {appointment?.state == "CHECKED_IN" ? (<TableCell>
+                        
+                      {role === "medic" ? 
+
+<TableCell>
+<Button color="foreground" disabled>Cant do this.</Button>
+</TableCell> :
+
+
+                      role === "staff" && (appointment.state === "PENDING" || appointment.state==="CHECKED_IN") ?
+                      (
+                        <TableCell>
+                          <Button color="foreground"
+
+                          >Cant issue bill yet.</Button>
+                        </TableCell>
+                      ):
+                      appointment.state==="FINISHED"?
+
+                      <TableCell>
+                      <Button color="success"
+                      onClick={() => issueBill.mutate(appointment.id)}
+
+                      
+
+                      >Issue Bill</Button>
+                    </TableCell>:
+
+                      appointment.state === "BILL_ISSUED" ?
+                      <TableCell>
+                        <Button color="foreground" disabled>Bill issued</Button>
+                      </TableCell>
+                      :
+                      appointment.state === "BILL_PAID" ?
+                      <TableCell>
+                        <Button color="foreground" disabled>Not allowed to issue bill yet.</Button>
+                         </TableCell>
+                      :
+                      <TableCell>
+                        <Button color="foreground" disabled>Cant do this.</Button>
+                      </TableCell>
+                      }
+                
+
+
+
+
+
+                        
+                      { role === "staff" ?
+                      (<TableCell>
+                        <Button color="default" disabled={true}>Not possible</Button>
+                      </TableCell>)
+                      :
+                      appointment?.state == "CHECKED_IN" ? (<TableCell>
                         <Button color="success" 
                         onClick={() => {
                           endAppointment.mutate(appointment.id);
@@ -115,18 +217,6 @@ function MyAppointments() {
                       </TableCell>)
                       }
 
-                      {/* <TableCell>
-                        {appointment.bill ? (
-                          <Button>View Bill</Button>
-                        ) : (
-                          <> 
-                          <span className="mr-4"> 
-                          Not issued yet.
-                          </span>
-                          <Button color="primary">Issue Bill</Button>
-                          </>
-                        )}
-                      </TableCell> */}
 
                     </TableRow>
                   ))}
