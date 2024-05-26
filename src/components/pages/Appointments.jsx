@@ -30,6 +30,8 @@ function MyAppointments() {
     queryKey: ["appointments"],
     queryFn: async () => {
 
+      console.log(role);
+
       if(role === "staff") {
         return await getAllAppointments();
       } else {
@@ -81,6 +83,23 @@ function MyAppointments() {
   });
 
 
+  const endAppointment = useMutation({
+    mutationKey: ["endAppointment"],
+    mutationFn: async (appointmentID) => {
+      const res = await axios.put(`/medic/appointments/${appointmentID}/end`, {}, {
+        headers: {
+          Authorization: localStorage.getItem("token")
+            ? `Bearer ${localStorage.getItem("token")}`
+            : undefined,
+        },
+      });
+      return res.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries("medicAppointments");
+    }
+  });
+
   const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure();
 
   return (
@@ -105,6 +124,7 @@ function MyAppointments() {
                   <TableColumn>Price</TableColumn>
                   <TableColumn>Notes</TableColumn>
                   <TableColumn>Bill Status</TableColumn>
+                  <TableColumn>Finish Appointment</TableColumn>
                   
                 </TableHeader>
                 <TableBody>
@@ -117,6 +137,8 @@ function MyAppointments() {
                       <TableCell>{appointment.medic.name}</TableCell>
                       <TableCell>{appointment.speciality}</TableCell>
                       <TableCell>{appointment.price}€</TableCell>
+
+
                       <TableCell>
                           <Button color="primary" 
                           onClick={() => {
@@ -126,7 +148,15 @@ function MyAppointments() {
                         }
                           >Check Notes</Button>
                       </TableCell> 
-                      {role === "staff" && (appointment.state === "PENDING" || appointment.state==="CHECKED_IN") ?
+                        
+                      {role === "medic" ? 
+
+<TableCell>
+<Button color="foreground" disabled>Cant do this.</Button>
+</TableCell> :
+
+
+                      role === "staff" && (appointment.state === "PENDING" || appointment.state==="CHECKED_IN") ?
                       (
                         <TableCell>
                           <Button color="foreground"
@@ -142,12 +172,12 @@ function MyAppointments() {
 
                       
 
-                      >Cant issue bill yet.</Button>
+                      >Issue Bill</Button>
                     </TableCell>:
 
                       appointment.state === "BILL_ISSUED" ?
                       <TableCell>
-                        <Button color="success" disabled>Bill issued</Button>
+                        <Button color="foreground" disabled>Bill issued</Button>
                       </TableCell>
                       :
                       appointment.state === "BILL_PAID" ?
@@ -166,7 +196,27 @@ function MyAppointments() {
 
 
                         
-                       
+                      { role === "staff" ?
+                      (<TableCell>
+                        <Button color="default" disabled={true}>Not possible</Button>
+                      </TableCell>)
+                      :
+                      appointment?.state == "CHECKED_IN" ? (<TableCell>
+                        <Button color="success" 
+                        onClick={() => {
+                          endAppointment.mutate(appointment.id);
+                        }}
+                        >Finish appointment</Button>
+                      </TableCell>)
+                      : 
+                      appointment?.state == "FINISHED" ? (<TableCell>
+                        <Button color="default" disabled={true}>Appointment finished already</Button>
+                      </TableCell>)
+                      :
+                      (<TableCell>
+                        <Button color="default" disabled={true}>Not possible</Button>
+                      </TableCell>)
+                      }
 
 
                     </TableRow>
