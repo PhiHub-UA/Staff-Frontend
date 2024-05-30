@@ -14,9 +14,8 @@ import {
 
 function Staff() {
 
-
-    const {data:staff} = useQuery({
-        queryKey: ["staff"],
+    const { data : staff } = useQuery({
+        queryKey: ["staffMembers"],
         queryFn: async () => {
             const res = await axios.get("staff", {
                 headers: {
@@ -27,8 +26,8 @@ function Staff() {
             });
             return res.data;
         },
+        enabled: true,
     });
-
 
     return (
         <main className="flex flex-col w-full min-h-screen hero-gradient">
