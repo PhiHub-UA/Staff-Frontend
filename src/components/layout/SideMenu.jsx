@@ -14,11 +14,14 @@ function SideMenu({ className }) {
       <section>
         <h1 className="py-2 space-y-2 text-2xl">Menu</h1>
         <ul className="flex flex-col gap-2 ">
+
+          { role && role === "staff" && ( 
           <li>
             <Link href="/dashboard" className="text-xl">
               Dashboard
             </Link>
           </li>
+          )}
 
           {role && role === "medic" && (
 

@@ -181,7 +181,7 @@ function MyAppointments() {
                       :
                       appointment.state === "BILL_PAID" ?
                       <TableCell>
-                        <Button color="foreground" disabled>Bill paid . ${appointment.price} </Button>
+                        <Button color="foreground" disabled>Bill paid -- {appointment.price}€ </Button>
                          </TableCell>
                       :
                       <TableCell>
