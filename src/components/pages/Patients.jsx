@@ -14,6 +14,7 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "../../api/axios";
 
 function Patients() {
+
   const { data: patients } = useQuery({
     queryKey: ["patients"],
     queryFn: async () => {
